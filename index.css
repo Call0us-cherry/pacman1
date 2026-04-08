@@ -99,3 +99,15 @@ body {
   from {color: #2121DE;}
   to {color: white;}
 }
+
+#timer {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 999;
+  color: yellow;
+  font-family: 'PressStart2P';
+  font-size: 1.2em;
+  text-shadow: 2px 2px black;
+  white-space: nowrap;
+}
