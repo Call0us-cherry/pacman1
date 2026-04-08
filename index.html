@@ -63,6 +63,7 @@
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
       <img id="spacebg" src="assets/images/starry-sky2.jpg">
+      <img id="sphereimg" src="assets/images/sphereimg.png">
     </a-assets>
   
     <!-- Player -->
@@ -113,7 +114,8 @@
       </a-camera> 
       <a-sphere color="yellow"
                 radius="0.35"
-                position="0 0.5 0.05">
+                position="0 0.5 0.05"
+        src="#sphereimg">
       </a-sphere>
     </a-entity>
 
@@ -164,6 +166,8 @@
 
     <!-- sky image -->
     <a-sky src="#spacebg"></a-sky>
+
+    
 
   </a-scene>
 
