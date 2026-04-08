@@ -63,7 +63,11 @@
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
       <img id="spacebg" src="assets/images/starry-sky2.jpg">
+<<<<<<< Updated upstream
       <img id="sphereimg" src="assets/images/sphereimg.png">
+=======
+      
+>>>>>>> Stashed changes
     </a-assets>
   
     <!-- Player -->
@@ -104,7 +108,11 @@
                 value: HIGH SCORE; 
                 width: 0.3;
                 font: assets/fonts/your-font.json">
+<<<<<<< Updated upstream
           </a-entity> 
+=======
+          </a-entity>
+>>>>>>> Stashed changes
             <!-- changed the high score to be spelt correctly -->
           </a-entity>
           <a-entity id="score"
@@ -117,10 +125,16 @@
           </a-entity>
         </a-entity>
       </a-camera> 
+<<<<<<< Updated upstream
       <a-sphere color="white"
                 radius="0.3"
                 position="0 0.5 0.05"
         src="#sphereimg">
+=======
+      <a-sphere color="red"
+                radius="0.35"
+                position="0 0.5 0.05">
+>>>>>>> Stashed changes
       </a-sphere>
     </a-entity>
 
@@ -179,8 +193,10 @@
 <script>
   let startTime = null;
   let timerInterval = null;
+
   const timerEl = document.getElementById("timer");
   const startBtn = document.getElementById("start");
+  const gameoverEl = document.getElementById("gameover");
 
   function updateTimer() {
     const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
@@ -189,13 +205,40 @@
     timerEl.textContent = `TIME: ${mins}:${secs}`;
   }
 
-  // Start timer ONLY when button is clicked
-  startBtn.addEventListener("click", () => {
-    if (timerInterval) return; // prevent restarting
-
+  function startTimer() {
+    if (timerInterval) return;
     startTime = Date.now();
     updateTimer();
     timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function resetTimer() {
+    stopTimer();
+    startTime = null;
+    timerEl.textContent = "TIME: 00:00";
+  }
+
+  startBtn.addEventListener("click", startTimer);
+
+  const observer = new MutationObserver(() => {
+    const style = window.getComputedStyle(gameoverEl);
+    const isVisible = style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
+
+    if (isVisible) {
+      stopTimer();
+    }
+  });
+
+  observer.observe(gameoverEl, {
+    attributes: true,
+    attributeFilter: ["style", "class"]
   });
 </script>
 
