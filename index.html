@@ -167,9 +167,11 @@
 
   </a-scene>
 
-  <script>
-  let startTime = Date.now();
+<script>
+  let startTime = null;
+  let timerInterval = null;
   const timerEl = document.getElementById("timer");
+  const startBtn = document.getElementById("start");
 
   function updateTimer() {
     const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
@@ -178,8 +180,14 @@
     timerEl.textContent = `TIME: ${mins}:${secs}`;
   }
 
-  updateTimer();
-  setInterval(updateTimer, 1000);
+  // Start timer ONLY when button is clicked
+  startBtn.addEventListener("click", () => {
+    if (timerInterval) return; // prevent restarting
+
+    startTime = Date.now();
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  });
 </script>
 
 </body>
