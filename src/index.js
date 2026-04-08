@@ -38,7 +38,7 @@ const P = {
 };
 
 // Colours and speeds
-const pColor = '#FFB897';   // Pellet colour (orange/peach)
+const pColor = '#a6c8de';   // Pellet colour (orange/peach)
 const gColor = 0x2121DE;    // Ghost colour during pill mode (blue)
 const gNormSpeed = 0.65;    // Normal ghost speed
 const gSlowSpeed = 0.2;     // Ghost speed during pill mode
