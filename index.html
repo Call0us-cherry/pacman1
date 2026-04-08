@@ -54,14 +54,14 @@
     <a-entity position="0 2.25 -15"
               particle-system="preset: dust">
     </a-entity>
-    
+
     <!-- preloaded files -->
     <a-assets>
       <a-asset-item id="navmesh" src="assets/models/navmesh.gltf"></a-asset-item> <!-- decides where the player and ghosts can walk-->
       <a-asset-item id="ghost" src="assets/models/ghost.gltf"></a-asset-item>
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
-      <img id="spacebg" src="spacebg.webp">
+      <img id="spacebg2" src="spacebg2.avif">
     </a-assets>
   
     <!-- Player -->
@@ -77,6 +77,7 @@
                 wasd-controls="enabled: false"
                 look-controls="enabled: false">
         <a-entity> 
+          <!-- player lives -->
           <a-image position="-0.15 0.225 -0.3" 
                    width="0.015"
                    height="0.015"
@@ -126,25 +127,25 @@
     <a-gltf-model gltf-model="#ghost"
                  position="0 0 -2.1"
                  nav-agent="speed: 0.65"
-                 ghost="0xFF0000">
+                 ghost="0xFF0000"> <!-- RED -->
     </a-gltf-model>
 
     <a-gltf-model gltf-model="#ghost"
                   position="-1 0 -0.5"
                   nav-agent="speed: 0.65"
-                  ghost="0x00FFDE">
+                  ghost="0x00FFDE"> <!-- BLUE -->
     </a-gltf-model>
 
     <a-gltf-model gltf-model="#ghost"
                   position="0 0 -0.5"
                   nav-agent="speed: 0.65"
-                  ghost="0xFFB8DE">
+                  ghost="0xFFB8DE"> <!-- PINK -->
     </a-gltf-model>
 
     <a-gltf-model gltf-model="#ghost"
                   position="1 0 -0.5"
                   nav-agent="speed: 0.65"
-                  ghost="0xFFB847">
+                  ghost="0xFFB847"> <!-- YELLOW -->
     </a-gltf-model>
 
     <!-- Scene -->
@@ -153,14 +154,15 @@
                   maze>
     </a-gltf-model>
 
+    <!-- floor -->
     <a-plane rotation="-90 0 0"
              width="15"
              height="16"
              color="black">
     </a-plane>
 
-    <a-sky src="#spacebg"></a-sky>
-    <a-sky src="#spacebg" rotation="0 -90 0"></a-sky>
+    <a-sky src="#spacebg2"></a-sky>
+    <a-sky src="#spacebg2" rotation="0 -90 0"></a-sky>
     <!-- changed from red to blue -->
   </a-scene>
 </body>
