@@ -64,7 +64,7 @@ const ready = new Howl({
   src: ['assets/sounds/ready.mp3'],
   onend: () => {
     ready.stop();
-    siren.play();
+    siren.play(); //change background sound
   }
 });
 
@@ -111,7 +111,7 @@ AFRAME.registerComponent('maze', {
   },
   initScene: function () {
     // Set opacity of the wall
-    setOpacity(this.el, 0.75);
+    setOpacity(this.el, 0.8);
 
     let sceneEl = this.el.sceneEl;
     let cnt = 0;
