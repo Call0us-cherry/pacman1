@@ -506,14 +506,18 @@ AFRAME.registerComponent('player', {
         pCnt--; // One less pellet remaining
         pellet.setAttribute('visible', false); // Hide the eaten pellet
 
-        if (currentP[4] >= P.POWERPILL) { // It's a power pill
-          eatPill.play();
-          score += pillScore;
-          this.onEatPill(); // Activate pill mode
-        } else { // Regular pellet
-          eating.play();
-          score += pelletScore;
-        }
+       if (currentP[4] >= P.POWERPILL) {
+  eatPill.play();
+
+  this.scoreMultCnt = x10Duration; // 🔥 start x10 mode
+
+  score += pillScore * this.getScoreMultiplier();
+  this.onEatPill();
+
+} else {
+  eating.play();
+  score += pelletScore * this.getScoreMultiplier();
+}
       }
       if (pCnt < 1) this.onWin(); // All pellets eaten — player wins!
     }
@@ -564,6 +568,12 @@ AFRAME.registerComponent('player', {
 
   // Pauses the game — called on death or win
   stop: function () {
+      this.scoreMultCnt = 0;
+    this.xrayCnt = 0;
+    this.speedCnt = 0;
+
+    const mazeEl = document.querySelector('[maze]');
+    if (mazeEl) setOpacity(mazeEl, 1.0);
     disableCamera(); // Stop player looking around
     dead = true;
     pillCnt = 0;
