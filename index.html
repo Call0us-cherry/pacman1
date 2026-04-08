@@ -58,6 +58,7 @@
       <a-asset-item id="ghost" src="assets/models/ghost.gltf"></a-asset-item>
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
+      <img id="spacebg" src="spacebg.webp">
     </a-assets>
   
     <!-- Player -->
@@ -155,8 +156,10 @@
              color="black">
     </a-plane>
 
-    <a-sky color="#27B4F5"></a-sky>
+    <a-sky src="#spacebg"></a-sky>
+    <a-sky src="#spacebg" rotation="0 -90 0"></a-sky>
     <!-- changed from red to blue -->
   </a-scene>
 </body>
 </html>
+
