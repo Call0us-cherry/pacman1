@@ -21,6 +21,7 @@
 </head>
 
 <body>
+  <!-- LOGO image and start button  -->
   <div class="logo-container overlay">
     <img id="logo" src="assets/images/logo.png">
     <button id="start" disabled>
@@ -44,17 +45,19 @@
   </div>
 
   <div id="sound" class="overlay fa fa-volume-up fa-2x"></div>
-  <div id="gameover" class="overlay"></div> 
+  <div id="gameover" class="overlay"></div>  <!-- hidden game overlay-->
   <div id="ready" class="overlay">READY!</div> 
   <!-- fixed spelling -->
 
+  <!-- 2d world frame-->
   <a-scene>
     <a-entity position="0 2.25 -15"
               particle-system="preset: dust">
     </a-entity>
-
+    
+    <!-- preloaded files -->
     <a-assets>
-      <a-asset-item id="navmesh" src="assets/models/navmesh.gltf"></a-asset-item>
+      <a-asset-item id="navmesh" src="assets/models/navmesh.gltf"></a-asset-item> <!-- decides where the player and ghosts can walk-->
       <a-asset-item id="ghost" src="assets/models/ghost.gltf"></a-asset-item>
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
