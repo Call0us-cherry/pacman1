@@ -46,7 +46,7 @@ let pillCnt = 0;
 let soundCtrl = true;
 
 const siren = new Howl({
-  src: ['assets/sounds/siren.mp3'],
+  src: ['assets/sounds/sirensound.mp3'],
   loop: true
 });
 
