@@ -279,12 +279,9 @@ AFRAME.registerComponent('maze', {
     let button2 = document.getElementById("easy-btn");
     let button3 = document.getElementById("hard-btn");
     if (button) {
-      const newButton = button.cloneNode(true); // cloning removes all existing listeners
-      button.parentNode.replaceChild(newButton, button);
-
-      newButton.addEventListener('click', this.start.bind(this));
-      newButton.innerHTML = "START";
-      newButton.disabled = false;
+      button.addEventListener('click', this.start.bind(this));
+      button.innerHTML = "START";
+      button.disabled = false;
       button2.disabled = false;
       button3.disabled = false;
     }
