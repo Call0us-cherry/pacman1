@@ -97,7 +97,7 @@ const die = new Howl({src: 'assets/sounds/die.mp3'});           // Player death 
 // Game modes
 const EASY_MODE = 'easy';
 const HARD_MODE = 'hard';
-let gameMode = EASY_MODE; // default to easy
+if (!window.gameMode) window.gameMode = EASY_MODE; // initialise only if HTML hasn't already
 
 // Easy mode settings
 const easyGhostSpeed = 0.4;      // slower than normal (0.65)
@@ -284,8 +284,12 @@ AFRAME.registerComponent('maze', {
 
   // Called when START or RESTART is clicked — resets and begins a new game
   start: function () {
+    // powerups are spawned correctly based on the player's current selection.
+    document.querySelectorAll('[data-powerup]').forEach(p => p.parentNode.removeChild(p));
+    this.spawnPowerups(this.el.sceneEl); // Spawn powerups for the chosen mode
+ 
     this.resetPowerups();  // Make powerup spheres visible again
-    this.initLife();       // Reset to 3 lives
+    this.initLife(); 
 
     // Apply mode settings to ghosts
   const ghostSpeed = window.gameMode === 'easy' ? easyGhostSpeed : hardGhostSpeed;
