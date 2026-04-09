@@ -499,7 +499,7 @@ AFRAME.registerComponent('player', {
 
     // Show the restart button
     let startEl = document.getElementById("start");
-    startEl.innerHTML = 'RESTARRRRT';
+    startEl.innerHTML = 'RESTART';
     startEl.style.display = 'block';
 
     // Show mode buttons again so player can switch before restarting

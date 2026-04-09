@@ -154,7 +154,7 @@ body {
   background-color: white;
 }
 
-#easy-btn:disabled {
+#easy-btn:disabled, #hard-btn:disabled{
   color: black;
   background-color: white;
 }
