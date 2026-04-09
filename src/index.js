@@ -501,6 +501,10 @@ AFRAME.registerComponent('player', {
     let startEl = document.getElementById("start");
     startEl.innerHTML = 'RESTART';
     startEl.style.display = 'block';
+
+    // Show mode buttons again so player can switch before restarting
+    document.getElementById("easy-btn").style.display = 'block';
+    document.getElementById("hard-btn").style.display = 'block';
   },
 
   // Checks if player is touching a specific ghost and handles the outcome

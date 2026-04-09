@@ -154,13 +154,18 @@ body {
   background-color: white;
 }
 
+#easy-btn:disabled {
+  color: black;
+  background-color: white;
+}
+
 .mode-btn.selected {
   background-color: transparent;
   color: black;
 }
 
-#start:hover, #start:active {
+#easy-btn:hover,  #hard-btn:hover{
   cursor: pointer;
   color: white;
-  background-color: red;
+  background-color: rgb(202, 130, 130);
 }
