@@ -293,7 +293,10 @@ AFRAME.registerComponent('maze', {
     pColor = window.gameMode === 'easy' ? '#00FF00' : '#FF0000';
 
     // powerups are spawned correctly based on the player's current selection.
-    document.querySelectorAll('[data-powerup]').forEach(p => p.parentNode.removeChild(p));
+    const sceneEl = this.el.sceneEl; // store reference before anything els
+    document.querySelectorAll('[data-powerup]').forEach(p => {
+    if (p && p.parentNode) p.parentNode.removeChild(p); // only remove if it exists
+  });
     this.spawnPowerups(this.el.sceneEl); // Spawn powerups for the chosen mode
  
     this.resetPowerups();  // Make powerup spheres visible again
