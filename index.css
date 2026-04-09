@@ -132,3 +132,34 @@ body {
   background: white;
   color: black;
 }
+
+#hard-btn {
+  position: fixed;
+  width: 145px;
+  height: 45px;
+  top: calc(50% + 60px);
+  left: 55%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  border: 2px solid rgb(222, 61, 61);
+  color: rgb(141, 42, 42);
+  background-color: white;
+}
+
+#easy-btn {
+  position: fixed;
+  width: 145px;
+  height: 45px;
+  top: calc(50% + 60px);
+  left: 40%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  border: 2px solid rgb(222, 61, 61);
+  color: rgb(141, 42, 42);
+  background-color: white;
+}
+
+.mode-btn.selected {
+  background: transparent;
+  color: black;
+}
