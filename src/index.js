@@ -743,13 +743,12 @@ function renderLife(cnt ) {
   let lifeEls = document.querySelectorAll("[life]");
   // FIX: use forEach with index so each icon is shown/hidden based on position
   lifeEls.forEach((el, i) => {
-    el.setAttribute('visible', i < (cnt+1) ? 'true' : 'false');
+    el.setAttribute('visible', i < (cnt) ? 'true' : 'false');
   });
 }
 
 // Resets the player position then starts the game after a delay
 // timeout = how long to wait before unpausing (e.g. 3000ms at game start, 1500ms after death)
-// lostLife = whether to deduct a life (false on first start, true after death)
 function restart(timeout, lostLife = false) {
   movePlayerToDefaultPosition();
   setTimeout(() => {
