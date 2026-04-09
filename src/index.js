@@ -204,7 +204,7 @@ AFRAME.registerComponent('maze', {
 
   // Builds the 3D scene: pellets, power pills, and the navigation path grid
   initScene: function () {
-    setOpacity(this.el, 0.8); // Start with fully opaque walls
+    setOpacity(this.el, 1.0); // Start with fully opaque walls
 
     let sceneEl = this.el.sceneEl;
     let cnt = 0;
