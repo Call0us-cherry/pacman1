@@ -128,17 +128,12 @@ body {
   border: 2px solid white;
 }
 
-.mode-btn.selected {
-  background: white;
-  color: black;
-}
-
 #hard-btn {
   position: fixed;
   width: 145px;
   height: 45px;
-  top: calc(50% + 60px);
-  left: 55%;
+  top: calc(43% + 60px);
+  left: 57%;
   transform: translate(-50%, -50%);
   border-radius: 5px;
   border: 2px solid rgb(222, 61, 61);
@@ -150,8 +145,8 @@ body {
   position: fixed;
   width: 145px;
   height: 45px;
-  top: calc(50% + 60px);
-  left: 40%;
+  top: calc(43% + 60px);
+  left: 43%;
   transform: translate(-50%, -50%);
   border-radius: 5px;
   border: 2px solid rgb(222, 61, 61);
@@ -160,6 +155,12 @@ body {
 }
 
 .mode-btn.selected {
-  background: transparent;
+  background-color: transparent;
   color: black;
+}
+
+#start:hover, #start:active {
+  cursor: pointer;
+  color: white;
+  background-color: red;
 }

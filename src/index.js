@@ -271,10 +271,14 @@ AFRAME.registerComponent('maze', {
   // Enables the START button once the game is ready to play
   initStartButton: function () {
     let button = document.getElementById("start");
+    let button2 = document.getElementById("easy-btn");
+    let button3 = document.getElementById("hard-btn");
     if (button) {
       button.addEventListener('click', this.start.bind(this));
       button.innerHTML = "START";
       button.disabled = false;
+      button2.disabled = false;
+      button3.disabled = false;
     }
   },
 
@@ -300,6 +304,8 @@ AFRAME.registerComponent('maze', {
     // Update the UI
     document.getElementById("logo").style.display = 'none';
     document.getElementById("start").style.display = 'none';
+    document.getElementById("hard-btn").style.display = 'none';
+    document.getElementById("easy-btn").style.display = 'none';
     document.getElementById("gameover").style.display = 'none';
     document.getElementById("ready").style.display = 'block'; // Show "READY!"
 
