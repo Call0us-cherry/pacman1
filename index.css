@@ -126,6 +126,7 @@ body {
   background: transparent;
   color: white;
   border: 2px solid white;
+  transition: all 0.2s ease;
 }
 
 #hard-btn {
@@ -159,11 +160,6 @@ body {
   background-color: white;
 }
 
-.mode-btn.selected {
-  background-color: transparent;
-  color: black;
-}
-
 #easy-btn:hover,  #hard-btn:hover{
   cursor: pointer;
   color: white;
@@ -195,4 +191,27 @@ body {
 
 #corner-menu button:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+/* Easy mode selected — green */
+#easy-btn.selected {
+  background: #00FF00;
+  color: black;
+  border-color: #00FF00;
+}
+
+/* Hard mode selected — red */
+#hard-btn.selected {
+  background: #FF0000;
+  color: white;
+  border-color: #FF0000;
+}
+
+/* Hover effects */
+#easy-btn:hover {
+  background: rgba(0, 255, 0, 0.3);
+}
+
+#hard-btn:hover {
+  background: rgba(255, 0, 0, 0.3);
 }

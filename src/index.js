@@ -12,6 +12,7 @@ const tickMs = 250; // How often the game updates (every 250 milliseconds)
 const x10Duration = Math.ceil(6000 / tickMs);   // 6 seconds
 const xrayDuration = Math.ceil(8000 / tickMs);  // 8 seconds
 const speedDuration = Math.ceil(5000 / tickMs); // 5 seconds
+const freezeDuration = Math.ceil(5000 / tickMs); // 5 seconds — freeze powerup
 
 const xrayWallOpacity = 0.25; // How see-through walls become during X-Ray powerup
 const superSpeed = 2.6;       // Player speed during speed boost powerup
@@ -38,7 +39,7 @@ const P = {
 };
 
 // Colours and speeds
-const pColor = '#dfb13e';   // Pellet colour
+const pColor = '#8fbe8f';   // Pellet colour
 const gColor = 0x2121DE;    // Ghost colour during pill mode (blue)
 const gNormSpeed = 0.65;    // Normal ghost speed
 const gSlowSpeed = 0.2;     // Ghost speed during pill mode
@@ -102,10 +103,12 @@ if (!window.gameMode) window.gameMode = EASY_MODE; // initialise only if HTML ha
 // Easy mode settings
 const easyGhostSpeed = 0.4;      // slower than normal (0.65)
 const easyPillDuration = 120;    // longer pill effect (normally 70)
+const easyLives = 5;             // more lives on easy
 
 // Hard mode settings  
 const hardGhostSpeed = 0.9;      // faster than normal
 const hardPillDuration = 40;     // shorter pill effect
+const hardLives = 3;             // fewer lives on hard
 
 // ─── MAZE COMPONENT ───────────────────────────────────────────────────────────
 AFRAME.registerComponent('maze', {
@@ -113,15 +116,17 @@ AFRAME.registerComponent('maze', {
   // Creates the two special powerup spheres (X-Ray and Speed) and places them in the maze
   spawnPowerups: function (sceneEl) {
     const defs = [
-      { id: 'xray',  type: 'xray',  x: 4,  z: 6,  color: '#00E5FF' }, // Blue X-Ray powerup
-      { id: 'speed', type: 'speed', x: 21, z: 20, color: '#FF3B30' }  // Red speed powerup
+      { id: 'xray',  type: 'xray',  x: 4,  z: 6,  color: '#0004ff' }, // Blue X-Ray powerup
+      { id: 'speed', type: 'speed', x: 21, z: 20, color: '#e730ff' },  // Red speed powerup
+      { id: 'shield', type: 'shield', x: 8,  z: 20, color: '#FFD700' }, // Gold — shield powerup
+      { id: 'freeze', type: 'freeze', x: 18, z: 8,  color: '#FFFFFF' }  // White — freeze powerup
     ];
 
     // Extra powerups in easy mode
   if (window.gameMode === 'easy') {
     defs.push(
-      { id: 'xray2',  type: 'xray',  x: 10, z: 15, color: '#00E5FF' },
-      { id: 'speed2', type: 'speed', x: 15, z: 5,  color: '#FF3B30' }
+      { id: 'xray2',  type: 'xray',  x: 10, z: 15, color: '#0004ff' },
+      { id: 'speed2', type: 'speed', x: 15, z: 5,  color: '#e730ff' }
     );
   }
 
@@ -176,7 +181,7 @@ AFRAME.registerComponent('maze', {
 
   // Resets lives back to 3
   initLife: function () {
-    lifeCnt = 3;
+    lifeCnt = window.gameMode === 'easy' ? easyLives : hardLives;
     // Delay to ensure A-Frame life elements are registered in the DOM before rendering
     setTimeout(() => renderLife(3), 100);
   },
@@ -204,7 +209,7 @@ AFRAME.registerComponent('maze', {
 
   // Builds the 3D scene: pellets, power pills, and the navigation path grid
   initScene: function () {
-    setOpacity(this.el, 1.0); // Start with fully opaque walls
+    setOpacity(this.el, 0.5); // Start with fully opaque walls
 
     let sceneEl = this.el.sceneEl;
     let cnt = 0;
@@ -284,6 +289,9 @@ AFRAME.registerComponent('maze', {
 
   // Called when START or RESTART is clicked — resets and begins a new game
   start: function () {
+    // Set pellet colour based on mode — green for easy, red for hard
+    pColor = window.gameMode === 'easy' ? '#00FF00' : '#FF0000';
+
     // powerups are spawned correctly based on the player's current selection.
     document.querySelectorAll('[data-powerup]').forEach(p => p.parentNode.removeChild(p));
     this.spawnPowerups(this.el.sceneEl); // Spawn powerups for the chosen mode
@@ -296,12 +304,16 @@ AFRAME.registerComponent('maze', {
   document.querySelectorAll('[ghost]').forEach(ghost => {
     ghost.setAttribute('nav-agent', { speed: ghostSpeed });
   });
-
+  //pill duration based on mode
   window.activePillDuration = window.gameMode === 'easy' ? easyPillDuration : hardPillDuration;
+  // Hard mode — ghosts always chase, no scatter phase
+    window.activeScatterDuration = window.gameMode === 'easy' ? scatterDuration : 0;
 
     // Make all pellets visible again
-    document.querySelectorAll('[pellet]')
-      .forEach(p => p.setAttribute('visible', true));
+    document.querySelectorAll('[pellet]').forEach(p => {
+      p.setAttribute('visible', true);
+      p.setAttribute('color', pColor); // Update existing pellet colours
+    });
     pCnt = totalP; // Reset pellet counter
 
     // Update the UI
@@ -330,6 +342,8 @@ AFRAME.registerComponent('player', {
     this.scoreMultCnt = 0;  // Score multiplier timer
     this.xrayCnt = 0;       // X-Ray powerup timer
     this.speedCnt = 0;      // Speed boost timer
+    this.freezeCnt = 0;     // Freeze powerup timer
+    this.shieldActive = false; // Shield powerup state — absorbs one ghost hit
     this.baseSpeed = gNormSpeed;
     this.tick = AFRAME.utils.throttleTick(this.tick, 250, this); // Limit tick to every 250ms
     this.waveCnt = 0;       // Scatter/chase mode timer
@@ -342,7 +356,7 @@ AFRAME.registerComponent('player', {
 
   // Runs every 250ms while the game is active
   tick: function () {
-    if (!dead && path.length >= row) {
+    if (!dead && !window.gamePaused && path.length >= row) {
       this.nextBg = siren;
 
       let position = this.el.getAttribute('position');
@@ -384,12 +398,27 @@ AFRAME.registerComponent('player', {
       if (Math.abs(pos.x - x) < gCollideDist && Math.abs(pos.z - z) < gCollideDist) {
         p.setAttribute('visible', false); // Hide the collected powerup
 
-        const type = p.getAttribute('data-powerup');
+      const type = p.getAttribute('data-powerup');
         if (type === 'xray') {
-          this.xrayCnt = xrayDuration;   // Start X-Ray timer
+          this.xrayCnt = xrayDuration;   // Start X-Ray timer — walls go transparent
         } else if (type === 'speed') {
           this.speedCnt = speedDuration; // Start speed boost timer
-        }
+        } else if (type === 'shield') {
+          // Shield — absorbs one ghost hit, player sphere turns gold
+          this.shieldActive = true;
+          document.querySelector('a-sphere').setAttribute('color', '#FFD700');
+        } else if (type === 'freeze') {
+          // Freeze — stops all ghosts for 5 seconds
+          this.freezeCnt = freezeDuration;
+          this.ghosts.forEach(ghost => {
+            ghost.setAttribute('nav-agent', { active: false });
+          });
+          setTimeout(() => {
+            // Unfreeze ghosts after duration
+            this.ghosts.forEach(ghost => {
+              if (!ghost.dead) ghost.setAttribute('nav-agent', { active: true });
+            });
+          }, 5000);}
       }
     });
   },
@@ -402,12 +431,13 @@ AFRAME.registerComponent('player', {
     if (this.scoreMultCnt > 0) this.scoreMultCnt--;
     if (this.xrayCnt > 0) this.xrayCnt--;
     if (this.speedCnt > 0) this.speedCnt--;
+    if (this.freezeCnt > 0) this.freezeCnt--;
 
     // X-Ray: make walls semi-transparent while active
     if (this.xrayCnt > 0) {
       setOpacity(mazeEl, xrayWallOpacity); // 25% opacity
     } else {
-      setOpacity(mazeEl, 1.0); // Restore full opacity when expired
+      setOpacity(mazeEl, 0.8); // Restore full opacity when expired
     }
 
     // Speed boost: increase player nav-agent speed while active
@@ -477,6 +507,7 @@ AFRAME.registerComponent('player', {
       if (this.nextBg != ghostEaten) this.nextBg = waza; // Play waza music during pill mode
     } else {
       // Alternate between scatter (random) and chase (follow player)
+      const activeScatter = window.activeScatterDuration !== undefined ? window.activeScatterDuration : scatterDuration;
       this.waveCnt = this.waveCnt > (chaseDuration + scatterDuration) ? 0 : this.waveCnt + 1;
       if (this.waveCnt > scatterDuration)
         targetPos = position; // Set player position as ghost target during chase
@@ -530,8 +561,14 @@ AFRAME.registerComponent('player', {
           setOpacity(ghost, 0.3); // Make ghost semi-transparent
           score += ghostScore * this.hitGhosts.length; // More points for consecutive ghosts
         } else { // Ghost is normal — player dies
-          this.onDie();
-          return;
+          if (this.shieldActive) {
+            // Shield absorbs the hit — revert player colour and deactivate shield
+            this.shieldActive = false;
+            document.querySelector('a-sphere').setAttribute('color', 'red');
+          } else {
+            this.onDie();
+            return;
+          }
         }
       }
     }
@@ -587,6 +624,10 @@ AFRAME.registerComponent('player', {
     window.stopTimer(); // Stop the timer immediately on death
     this.stop();
 
+    // Reset shield and player colour on death
+    this.shieldActive = false;
+    document.querySelector('a-sphere').setAttribute('color', 'red');
+
     // Play a 720° spin animation on the player
     let player = this.player;
     player.setAttribute('nav-agent', { active: false });
@@ -613,10 +654,11 @@ AFRAME.registerComponent('player', {
     this.scoreMultCnt = 0; // Reset all powerup timers
     this.xrayCnt = 0;
     this.speedCnt = 0;
+    this.freezeCnt = 0;
 
     // Restore wall opacity in case X-Ray was active
     const mazeEl = document.querySelector('[maze]');
-    if (mazeEl) setOpacity(mazeEl, 1.0);
+    if (mazeEl) setOpacity(mazeEl, 0.8);
 
     disableCamera(); // Stop player looking around
     dead = true;
@@ -742,7 +784,7 @@ function updateLife() {
 
 // Shows/hides the Pac-Man life icons in the HUD based on remaining lives
 // e.g. renderLife(2) shows 2 icons, hides the 3rd
-function renderLife(cnt ) {
+function renderLife(cnt) {
   let lifeEls = document.querySelectorAll("[life]");
   // FIX: use forEach with index so each icon is shown/hidden based on position
   lifeEls.forEach((el, i) => {
