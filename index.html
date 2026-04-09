@@ -24,6 +24,13 @@
 <body>
   <div id="timer">TIME: 00:00</div>
 
+
+<div id="corner-menu">
+  <button id="restart-btn">Restart</button>
+  <button id="pause-btn">Pause</button>
+  <button id="quit-btn">Quit Game</button>
+</div>
+
   <!-- LOGO image and start button -->
   <div class="logo-container overlay">
   <img id="logo" src="assets/images/pacman2.png">
@@ -185,55 +192,119 @@
   </a-scene>
 
 <script>
-  AFRAME.registerComponent('opaque-mesh', {
-    init() {
-      this.el.addEventListener('model-loaded', () => {
-        this.el.object3D.traverse((node) => {
-          if (node.isMesh && node.material) {
-            node.material.transparent = false;
-            node.material.opacity = 1;
-            node.material.needsUpdate = true;
-          }
-        });
+AFRAME.registerComponent('opaque-mesh', {
+  init() {
+    this.el.addEventListener('model-loaded', () => {
+      this.el.object3D.traverse((node) => {
+        if (node.isMesh && node.material) {
+          node.material.transparent = false;
+          node.material.opacity = 1;
+          node.material.needsUpdate = true;
+        }
       });
-    }
-  });
-  let startTime = null;
-  let timerInterval = null;
+    });
+  }
+});
 
-  window.startTimer = function() {
-    if (timerInterval) clearInterval(timerInterval);
+let timerInterval = null;
+let startTime = 0;
+let elapsedSeconds = 0;
+window.gamePaused = false;
+
+function updateTimerDisplay(totalSeconds) {
+  const mins = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+  const secs = String(totalSeconds % 60).padStart(2, "0");
+  document.getElementById("timer").textContent = `TIME: ${mins}:${secs}`;
+}
+
+window.startTimer = function (reset = true) {
+  if (timerInterval) clearInterval(timerInterval);
+  if (reset) elapsedSeconds = 0;
+
+  startTime = Date.now();
+  updateTimerDisplay(elapsedSeconds);
+
+  timerInterval = setInterval(() => {
+    const total = elapsedSeconds + Math.floor((Date.now() - startTime) / 1000);
+    updateTimerDisplay(total);
+  }, 1000);
+};
+
+window.stopTimer = function () {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  if (startTime) {
+    elapsedSeconds += Math.floor((Date.now() - startTime) / 1000);
+  }
+};
+
+window.togglePause = function () {
+  const sceneEl = document.querySelector("a-scene");
+  const pauseBtn = document.getElementById("pause-btn");
+
+  if (!window.gamePaused) {
+    window.stopTimer();
+    if (sceneEl && sceneEl.pause) sceneEl.pause();
+    pauseBtn.textContent = "Resume";
+    window.gamePaused = true;
+  } else {
     startTime = Date.now();
-    const timerEl = document.getElementById("timer");
-    timerEl.textContent = "TIME: 00:00";
+    if (sceneEl && sceneEl.play) sceneEl.play();
     timerInterval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const mins = String(Math.floor(elapsed / 60)).padStart(2, "0");
-      const secs = String(elapsed % 60).padStart(2, "0");
-      timerEl.textContent = `TIME: ${mins}:${secs}`;
+      const total = elapsedSeconds + Math.floor((Date.now() - startTime) / 1000);
+      updateTimerDisplay(total);
     }, 1000);
-  };
+    pauseBtn.textContent = "Pause";
+    window.gamePaused = false;
+  }
+};
 
-  window.stopTimer = function() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
-  };
+window.restartGame = function () {
+  window.location.reload();
+};
 
-  // Watch the ready div — when it appears, the game has started
-  const readyEl = document.getElementById("ready");
+window.quitGame = function () {
+  window.stopTimer();
+  const sceneEl = document.querySelector("a-scene");
+  if (sceneEl && sceneEl.pause) sceneEl.pause();
+
   const gameoverEl = document.getElementById("gameover");
+  gameoverEl.style.display = "block";
+  gameoverEl.textContent = "GAME QUIT";
 
-  new MutationObserver(() => {
-    if (readyEl.style.display === 'block') window.startTimer();
-  }).observe(readyEl, { attributes: true, attributeFilter: ['style'] });
+  setTimeout(() => {
+    window.close();
+  }, 100);
+};
 
-  new MutationObserver(() => {
-    if (gameoverEl.style.display === 'block') window.stopTimer();
-  }).observe(gameoverEl, { attributes: true, attributeFilter: ['style'] });
+// Buttons
+document.getElementById("restart-btn").addEventListener("click", window.restartGame);
+document.getElementById("pause-btn").addEventListener("click", window.togglePause);
+document.getElementById("quit-btn").addEventListener("click", window.quitGame);
 
-  // Mode selection
+// Watch the ready div — when it appears, the game has started
+const readyEl = document.getElementById("ready");
+const gameoverEl = document.getElementById("gameover");
+
+new MutationObserver(() => {
+  if (readyEl.style.display === 'block') {
+    window.gamePaused = false;
+    document.getElementById("pause-btn").textContent = "Pause";
+    window.startTimer();
+  }
+}).observe(readyEl, { attributes: true, attributeFilter: ['style'] });
+
+new MutationObserver(() => {
+  if (gameoverEl.style.display === 'block') {
+    window.stopTimer();
+    window.gamePaused = false;
+    document.getElementById("pause-btn").textContent = "Pause";
+  }
+}).observe(gameoverEl, { attributes: true, attributeFilter: ['style'] });
+
+// Mode selection
 const easyBtn = document.getElementById('easy-btn');
 const hardBtn = document.getElementById('hard-btn');
 
@@ -249,7 +320,7 @@ hardBtn.addEventListener('click', () => {
   easyBtn.classList.remove('selected');
 });
 
-window.gameMode = 'easy'; // default
+window.gameMode = 'easy';
 </script>
 
 </body>

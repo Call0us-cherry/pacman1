@@ -38,7 +38,7 @@ const P = {
 };
 
 // Colours and speeds
-const pColor = '#a6c8de';   // Pellet colour
+const pColor = '#df3ed2';   // Pellet colour
 const gColor = 0x2121DE;    // Ghost colour during pill mode (blue)
 const gNormSpeed = 0.65;    // Normal ghost speed
 const gSlowSpeed = 0.2;     // Ghost speed during pill mode
@@ -294,7 +294,6 @@ AFRAME.registerComponent('maze', {
   });
 
   window.activePillDuration = window.gameMode === 'easy' ? easyPillDuration : hardPillDuration;
-
 
     // Make all pellets visible again
     document.querySelectorAll('[pellet]')
