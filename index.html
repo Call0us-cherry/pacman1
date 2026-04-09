@@ -62,7 +62,7 @@
 
     <a-assets>
       <a-asset-item id="navmesh" src="assets/models/navmesh.gltf"></a-asset-item>
-      <a-asset-item id="ghost" src="assets/models/ghost2.gltf"></a-asset-item>
+      <a-asset-item id="ghost" src="assets/models/ghost.gltf"></a-asset-item>
       <a-asset-item id="maze" src="assets/models/maze.gltf"></a-asset-item>
       <img id="life" src="assets/images/pacman.png">
       <img id="spacebg" src="assets/images/starry-sky2.jpg">
@@ -169,7 +169,7 @@
     <!-- Maze -->
     <a-gltf-model scale="1 1.6 1"
                   gltf-model="#maze"
-                  maze>
+                  opaque maze>
     </a-gltf-model>
 
     <!-- Floor -->
@@ -185,6 +185,19 @@
   </a-scene>
 
 <script>
+  AFRAME.registerComponent('opaque-mesh', {
+    init() {
+      this.el.addEventListener('model-loaded', () => {
+        this.el.object3D.traverse((node) => {
+          if (node.isMesh && node.material) {
+            node.material.transparent = false;
+            node.material.opacity = 1;
+            node.material.needsUpdate = true;
+          }
+        });
+      });
+    }
+  });
   let startTime = null;
   let timerInterval = null;
 
@@ -238,7 +251,6 @@ hardBtn.addEventListener('click', () => {
 
 window.gameMode = 'easy'; // default
 </script>
-
 
 </body>
 </html>
