@@ -215,3 +215,8 @@ body {
 #hard-btn:hover {
   background: rgba(255, 0, 0, 0.3);
 }
+
+#pel{
+  width:300px;
+  height:200px;
+}
