@@ -6,7 +6,6 @@ module.exports = {
     path: path.join(__dirname, '/dist'),
     publicPath: "/dist/",
     filename: 'bundle.js',
-    watch: true
   },
   resolve: {
     modules: [
