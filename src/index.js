@@ -752,7 +752,8 @@ function updateAgentDest(object, dest) {
 // Changes a ghost's body colour by finding its material named 'ghostmat'
 function updateGhostColor(ghost, color) {
   ghost.traverse(child => {
-    if (child instanceof THREE.Mesh && child.material.name === 'AmongUs')
+    if (child instanceof THREE.Mesh && 
+       (child.material.name === 'ghostmat' || child.material.name === 'AmongUs'))
       child.material.color.setHex(color);
   });
 }
