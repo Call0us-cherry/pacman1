@@ -783,6 +783,7 @@ function enableCamera() {
 function updateLife() {  
   if (lifeCnt > 0) {
     lifeCnt--;
+    console.log(lifeCnt)
     renderLife(lifeCnt);
   }
 }
