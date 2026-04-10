@@ -273,7 +273,7 @@ AFRAME.registerComponent('maze', {
     totalP = pCnt; // Save total pellet count for restarting
   },
 
-  // Enables the START button once the game is ready to play
+  // Enables the START button once the game is ready to playy
   initStartButton: function () {
     console.log('enable start button')
     let button = document.getElementById("start");
