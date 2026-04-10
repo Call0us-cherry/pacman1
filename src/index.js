@@ -275,7 +275,6 @@ AFRAME.registerComponent('maze', {
 
   // Enables the START button once the game is ready to playy
   initStartButton: function () {
-    console.log('enable start button')
     let button = document.getElementById("start");
     let button2 = document.getElementById("easy-btn");
     let button3 = document.getElementById("hard-btn");
