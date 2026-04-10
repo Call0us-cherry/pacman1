@@ -209,7 +209,7 @@ AFRAME.registerComponent('maze', {
 
   // Builds the 3D scene: pellets, power pills, and the navigation path grid
   initScene: function () {
-    setOpacity(this.el, 0.5); // Start with fully opaque walls
+    setOpacity(this.el, 0.5); 
 
     let sceneEl = this.el.sceneEl;
     let cnt = 0;
@@ -275,6 +275,7 @@ AFRAME.registerComponent('maze', {
 
   // Enables the START button once the game is ready to play
   initStartButton: function () {
+    console.log('enable start button')
     let button = document.getElementById("start");
     let button2 = document.getElementById("easy-btn");
     let button3 = document.getElementById("hard-btn");
@@ -289,11 +290,12 @@ AFRAME.registerComponent('maze', {
 
   // Called when START or RESTART is clicked — resets and begins a new game
   start: function () {
+    console.log('starting!!')
     // Set pellet colour based on mode — green for easy, red for hard
     pColor = window.gameMode === 'easy' ? '#00FF00' : '#FF0000';
 
     // powerups are spawned correctly based on the player's current selection.
-    const sceneEl = this.el.sceneEl; // store reference before anything els
+   // const sceneEl = this.el.sceneEl; // store reference before anything els
     document.querySelectorAll('[data-powerup]').forEach(p => {
     if (p && p.parentNode) p.parentNode.removeChild(p); // only remove if it exists
   });
@@ -310,7 +312,7 @@ AFRAME.registerComponent('maze', {
   //pill duration based on mode
   window.activePillDuration = window.gameMode === 'easy' ? easyPillDuration : hardPillDuration;
   // Hard mode — ghosts always chase, no scatter phase
-    window.activeScatterDuration = window.gameMode === 'easy' ? scatterDuration : 0;
+  window.activeScatterDuration = window.gameMode === 'easy' ? scatterDuration : 0;
 
     // Make all pellets visible again
     document.querySelectorAll('[pellet]').forEach(p => {
