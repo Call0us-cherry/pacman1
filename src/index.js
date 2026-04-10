@@ -39,7 +39,7 @@ const P = {
 };
 
 // Colours and speeds
-const pColor = '#8fbe8f';   // Pellet colour
+let pColor = '#8fbe8f';   // Pellet colour
 const gColor = 0x2121DE;    // Ghost colour during pill mode (blue)
 const gNormSpeed = 0.65;    // Normal ghost speed
 const gSlowSpeed = 0.2;     // Ghost speed during pill mode
@@ -179,11 +179,11 @@ AFRAME.registerComponent('maze', {
     });
   },
 
-  // Resets lives back to 3
+  // Resets lives
   initLife: function () {
     lifeCnt = window.gameMode === 'easy' ? easyLives : hardLives;
     // Delay to ensure A-Frame life elements are registered in the DOM before rendering
-    setTimeout(() => renderLife(3), 100);
+    setTimeout(() => renderLife(lifeCnt), 100);
   },
 
   // Sets up the speaker icon click to toggle all sounds on/off
