@@ -290,7 +290,7 @@ AFRAME.registerComponent('maze', {
 
   // Called when START or RESTART is clicked — resets and begins a new game
   start: function () {
-    console.log('starting2!!')
+    console.log('starting3!!')
     // Set pellet colour based on mode — green for easy, red for hard
     pColor = window.gameMode === 'easy' ? '#00FF00' : '#FF0000';
 
